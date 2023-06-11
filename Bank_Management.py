@@ -207,7 +207,7 @@ while not logged_in:
         else:
             user = User(name, email, password)
             my_bank.add_user(user)
-    if a == "2":
+    elif a == "2":
         # logged_in = True
         email = input("Please Enter your email: ")
         password = input("Please Enter your password: ")
@@ -305,7 +305,7 @@ while not logged_in:
                         continue
             else:
                 print("Wrong Password!Try again.")
-        if email == admin.email:
+        elif email == admin.email:
             if password == admin.password:
                 # print(admin)
                 logged_in = True
@@ -316,9 +316,9 @@ while not logged_in:
                     print(
                         f"{my_bank.name} have total balance:", my_bank.bank_total_money
                     )
-                if a_i == "2":
+                elif a_i == "2":
                     print(f"{my_bank.name} have total loan:", my_bank.bank_total_loan)
-                if a_i == "3":
+                elif a_i == "3":
                     print(f"Press Digit\n1.On\n2. Off")
                     on_of_i = int(input("Please press digit: "))
                     if on_of_i == 1:
@@ -333,12 +333,12 @@ while not logged_in:
                         else:
                             my_bank.can_loan = False
                             print("Successfully off feature!")
-                if a_i == "4":
+                elif a_i == "4":
                     logged_in = admin.logout()
                     # if not logged_in:
                     #     break
                 else:
-                    print("Wrongly Pressed !!!")
+                    print("Wrongly Pressed admin !!!")
                     continue
             else:
                 print("Wrong Password!Try again.")
