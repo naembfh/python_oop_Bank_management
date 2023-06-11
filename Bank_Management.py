@@ -102,10 +102,14 @@ class User:
         if self.loan:
             print("You have loan !")
         else:
-            self.loan = True
-            self.loan_money = self.total_money * 2
-            print("Congrats! Your loan accapted.")
-            return True
+            # self.loan = True
+            if user.total_money != 0:
+                self.loan = True
+                self.loan_money = self.total_money * 2
+                print("Congrats! Your loan accapted.")
+                return True
+            else:
+                print("You have 0 balance can not approve loan.")
 
     def transaction_history(self):
         print("*** Your Transaction History ***")
@@ -125,6 +129,8 @@ class User:
                 )
             elif transaction.trans_name == "recieve":
                 print(f"Recieved Amount: {transaction.amount} RM from {transaction.to}")
+            elif transaction.trans_name == "loan":
+                print(f"Loaned Amount: {transaction.amount} RM ")
             print(f"Balance After Transaction: {transaction.after_add_total_money} RM")
             print()
             index += 1
@@ -191,8 +197,8 @@ while not logged_in:
     print("---- Welcome To Monday Bank ----")
     print(f"1. New to Bank? Signup\n2. Login")
     # a = int(input("Plesase type digit: "))
-    a = (input("Plesase type digit: "))
-    if a == '1':
+    a = input("Plesase type digit: ")
+    if a == "1":
         name = input("Please Enter your name: ")
         email = input("Please Enter your email: ")
         password = input("Please Enter your password: ")
@@ -201,7 +207,7 @@ while not logged_in:
         else:
             user = User(name, email, password)
             my_bank.add_user(user)
-    if a == '2':
+    if a == "2":
         # logged_in = True
         email = input("Please Enter your email: ")
         password = input("Please Enter your password: ")
@@ -216,8 +222,8 @@ while not logged_in:
                 while logged_in:
                     print(user)
                     # u_a = int(input("Please type digit: "))
-                    u_a = int(input("Please type digit: "))
-                    if u_a == 1:
+                    u_a = input("Please type digit: ")
+                    if u_a == "1":
                         amount = int(input("Please enter your amount: "))
                         transaction = Transaction(
                             "deposit", amount, user.name, user.total_money + amount
@@ -227,7 +233,7 @@ while not logged_in:
                         if is_success:
                             my_bank.add_money("+", amount)
 
-                    elif u_a == 2:
+                    elif u_a == "2":
                         amount = int(input("Please enter your amount: "))
                         transaction = Transaction(
                             "withdraw", amount, user.name, user.total_money - amount
@@ -236,9 +242,9 @@ while not logged_in:
                         is_succes = user.withdraw(amount, transaction)
                         if is_succes:
                             my_bank.add_money("-", amount)
-                    elif u_a == 3:
+                    elif u_a == "3":
                         user.check_balance()
-                    elif u_a == 4:
+                    elif u_a == "4":
                         reciever = input("Please input reciever email: ")
                         if reciever in my_bank.users:
                             reciever_name = input("Please input reciever name: ")
@@ -273,9 +279,9 @@ while not logged_in:
 
                         else:
                             print("User not Exists in the bank")
-                    elif u_a == 5:
+                    elif u_a == "5":
                         user.transaction_history()
-                    elif u_a == 6:
+                    elif u_a == "6":
                         can = my_bank.can_loan
                         if can == True:
                             if my_bank.bank_total_money >= user.total_money * 2:
@@ -283,15 +289,20 @@ while not logged_in:
                                 if is_succes:
                                     my_bank.bank_total_loan += user.loan_money
                                     my_bank.bank_total_money -= user.loan_money
+                                    transaction=Transaction('loan',user.total_money*2,user.name,user.total_money)
+                                    user.transection_history.append(transaction)
                             else:
                                 print(f"Bank do not have enough money!")
                         else:
                             print("At this moment can not take loan!Be patient.")
 
-                    elif u_a == 7:
+                    elif u_a == "7":
                         logged_in = user.logout()
                         # if not logged_in:
                         #     break
+                    else:
+                        print("Wrongly pressed!!!")
+                        continue
             else:
                 print("Wrong Password!Try again.")
         if email == admin.email:
@@ -300,14 +311,14 @@ while not logged_in:
                 logged_in = True
             while logged_in:
                 print(admin)
-                a_i = int(input("Please type digit: "))
-                if a_i == 1:
+                a_i = input("Please type digit: ")
+                if a_i == "1":
                     print(
                         f"{my_bank.name} have total balance:", my_bank.bank_total_money
                     )
-                if a_i == 2:
+                if a_i == "2":
                     print(f"{my_bank.name} have total loan:", my_bank.bank_total_loan)
-                if a_i == 3:
+                if a_i == "3":
                     print(f"Press Digit\n1.On\n2. Off")
                     on_of_i = int(input("Please press digit: "))
                     if on_of_i == 1:
@@ -322,10 +333,13 @@ while not logged_in:
                         else:
                             my_bank.can_loan = False
                             print("Successfully off feature!")
-                if a_i == 4:
+                if a_i == "4":
                     logged_in = admin.logout()
                     # if not logged_in:
                     #     break
+                else:
+                    print("Wrongly Pressed !!!")
+                    continue
             else:
                 print("Wrong Password!Try again.")
         else:
