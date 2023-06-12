@@ -224,58 +224,71 @@ while not logged_in:
                     # u_a = int(input("Please type digit: "))
                     u_a = input("Please type digit: ")
                     if u_a == "1":
-                        amount = int(input("Please enter your amount: "))
-                        transaction = Transaction(
-                            "deposit", amount, user.name, user.total_money + amount
-                        )
+                        amount = input("Please enter your amount: ")
+                        if not amount.isdigit():
+                            print("Invalid input! Please enter integer amount.")
+                        else:
+                            amount = int(amount)
+                            transaction = Transaction(
+                                "deposit", amount, user.name, user.total_money + amount
+                            )
 
-                        is_success = user.deposit(amount, transaction)
-                        if is_success:
-                            my_bank.add_money("+", amount)
+                            is_success = user.deposit(amount, transaction)
+                            if is_success:
+                                my_bank.add_money("+", amount)
 
                     elif u_a == "2":
-                        amount = int(input("Please enter your amount: "))
-                        transaction = Transaction(
-                            "withdraw", amount, user.name, user.total_money - amount
-                        )
+                        amount = input("Please enter your amount: ")
+                        if not amount.isdigit():
+                            print("Invalid input! Please enter integer amount.")
+                        else:
+                            amount = int(amount)
 
-                        is_succes = user.withdraw(amount, transaction)
-                        if is_succes:
-                            my_bank.add_money("-", amount)
+                            transaction = Transaction(
+                                "withdraw", amount, user.name, user.total_money - amount)
+
+                            is_succes = user.withdraw(amount, transaction)
+                            if is_succes:
+                                my_bank.add_money("-", amount)
                     elif u_a == "3":
                         user.check_balance()
                     elif u_a == "4":
                         reciever = input("Please input reciever email: ")
                         if reciever in my_bank.users:
                             reciever_name = input("Please input reciever name: ")
-                            amount = int(input("Please enter your amount:  "))
-                            reciever_user = my_bank.users[reciever]
-                            if reciever_user.name != reciever_name:
-                                print("Name does not match !")
-                            #   elif reciever.name  in my_bank.users[reciever]:
-                            #       user.transfer_money(amount)
+                            amount = input("Please enter your amount:  ")
+                            if not amount.isdigit():
+                                print("Invalid input! Please enter integer amount.")
                             else:
-                                transaction_user = Transaction(
-                                    "transfer",
-                                    amount,
-                                    reciever_user.name,
-                                    user.total_money - amount,
-                                )
-                                reciever_user.total_money += amount
+                                amount = int(amount)
+                                
+                                reciever_user = my_bank.users[reciever]
+                                if reciever_user.name != reciever_name:
+                                    print("Name does not match !")
+                                #   elif reciever.name  in my_bank.users[reciever]:
+                                #       user.transfer_money(amount)
+                                else:
+                                    transaction_user = Transaction(
+                                        "transfer",
+                                        amount,
+                                        reciever_user.name,
+                                        user.total_money - amount,
+                                    )
+                                    reciever_user.total_money += amount
 
-                                transaction_reciever = Transaction(
-                                    "recieve",
-                                    amount,
-                                    user.name,
-                                    reciever_user.total_money,
-                                )
-                                # reciever_user.total_money += amount
-                                reciever_user.transection_history.append(
-                                    transaction_reciever
-                                )
-                                user.transfer_money(
-                                    amount, reciever_user.name, transaction_user
-                                )
+                                    transaction_reciever = Transaction(
+                                        "recieve",
+                                        amount,
+                                        user.name,
+                                        reciever_user.total_money,
+                                    )
+                                    # reciever_user.total_money += amount
+                                    reciever_user.transection_history.append(
+                                        transaction_reciever
+                                    )
+                                    user.transfer_money(
+                                        amount, reciever_user.name, transaction_user
+                                    )
 
                         else:
                             print("User not Exists in the bank")
@@ -289,7 +302,12 @@ while not logged_in:
                                 if is_succes:
                                     my_bank.bank_total_loan += user.loan_money
                                     my_bank.bank_total_money -= user.loan_money
-                                    transaction=Transaction('loan',user.total_money*2,user.name,user.total_money)
+                                    transaction = Transaction(
+                                        "loan",
+                                        user.total_money * 2,
+                                        user.name,
+                                        user.total_money,
+                                    )
                                     user.transection_history.append(transaction)
                             else:
                                 print(f"Bank do not have enough money!")
@@ -320,19 +338,22 @@ while not logged_in:
                     print(f"{my_bank.name} have total loan:", my_bank.bank_total_loan)
                 elif a_i == "3":
                     print(f"Press Digit\n1.On\n2. Off")
-                    on_of_i = int(input("Please press digit: "))
-                    if on_of_i == 1:
+                    on_of_i = input("Please press digit: ")
+                    if on_of_i == "1":
                         if my_bank.can_loan == True:
                             print("Bank loan feature already on!")
                         else:
                             my_bank.can_loan = True
                             print("Successfully on feature")
-                    if on_of_i == 2:
+                    if on_of_i == "2":
                         if my_bank.can_loan == False:
                             print("Bank loan feature already off!")
                         else:
                             my_bank.can_loan = False
                             print("Successfully off feature!")
+                    else:
+                        print("Wrongly pressed!!!")
+                        continue
                 elif a_i == "4":
                     logged_in = admin.logout()
                     # if not logged_in:
